@@ -6,6 +6,9 @@
 
 A LUSAS Modeller plugin for applying scientific contour colour palettes and editing individual contour colours.
 
+> [!IMPORTANT]  
+> This app has been AI coded.
+
 ## Features
 
 - 33 built-in palettes: 20 sequential, 10 diverging and 3 qualitative.
