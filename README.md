@@ -22,8 +22,8 @@ A LUSAS Modeller plugin for applying scientific contour colour palettes and edit
 
 ## Preview
 
-<img src="docs/preview_dialog.png" alt="Contour Colours dialog">
-<img src="docs/preview_beam.png" alt="Plasma contour applied on a beam">
+<img src="docs/preview_1.jpg" alt="Red-Blue palette">
+<img src="docs/preview_2.png" alt="Plasma palette">
 
 ## Requirements
 
