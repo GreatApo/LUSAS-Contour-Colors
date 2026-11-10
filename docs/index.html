@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LUSAS Contour Colours – Web UI</title>
+<link rel="icon" type="image/svg+xml" href="../logo.svg">
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--muted:#64748b;--text:#1e293b;--border:#eef1f6;--accent:#6366f1;--pill:#eef2ff;--shadow:0 6px 24px rgba(15,23,42,.07),0 1px 3px rgba(15,23,42,.06)}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI Variable Display","Segoe UI",system-ui,Roboto,Arial,sans-serif;color:var(--text);background:
+ radial-gradient(1100px 550px at 12% -10%, #e0e7ff 0%, transparent 60%),
+ radial-gradient(900px 650px at 108% 12%, #ffe4e6 0%, transparent 55%),
+ radial-gradient(850px 550px at 50% 115%, #d1fae5 0%, transparent 50%),
+ linear-gradient(180deg,#fafbff,#eef1f8);
+ background-attachment:fixed}
+header{padding:24px 24px 10px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.site-head-row{display:flex;align-items:center;gap:12px}
+h1{margin:0;font-size:30px;font-weight:750;letter-spacing:.3px;background:linear-gradient(90deg,#2563eb,#7c3aed,#db2777);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tagline{color:var(--muted);font-size:13.5px}
+.container{max-width:988px;margin:0 auto;padding:16px}
+.main-col{min-width:0}
+.top-row{display:grid;grid-template-columns:200px max-content;gap:16px;align-items:stretch}
+.cube-card{display:flex;align-items:center;justify-content:center}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:var(--shadow)}
+.hero{display:flex;gap:12px;align-items:center}
+.swatch-col{display:flex;flex-direction:column;gap:10px}
+.sec-label{font-size:11.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);padding-left:2px}
+#swatchCanvas{background:transparent;max-width:100%}
+.controls{display:flex;gap:10px;align-items:center;justify-content:flex-end}
+.stepper{display:flex;align-items:center;gap:6px;background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:4px 6px}
+.stepper>span{font-size:12.5px;color:var(--muted);font-weight:600;padding-left:4px}
+.stepper button{width:28px;height:28px;border-radius:9px;border:none;background:transparent;cursor:pointer;font-size:15px;color:#475569;transition:background .15s}
+.stepper button:hover{background:#e2e8f0}
+.stepper input{width:52px;text-align:center;border:none;background:transparent;font:inherit;font-weight:600;color:var(--text);-moz-appearance:textfield}
+.stepper input:focus{outline:none}
+.stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.btn{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:12px;padding:9px 16px;cursor:pointer;font-weight:600;font-size:13.5px;box-shadow:0 3px 10px rgba(99,102,241,.25);transition:transform .15s,box-shadow .15s,filter .15s}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.06);box-shadow:0 5px 14px rgba(99,102,241,.35)}
+.btn:active{transform:translateY(0)}
+.btn.secondary{background:#fff;color:#475569;border:1px solid var(--border);box-shadow:none}
+.btn.secondary:hover{border-color:#c7d2fe;color:#4f46e5;transform:translateY(-1px);box-shadow:0 3px 10px rgba(99,102,241,.12)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pal-col h3{margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+.pal-list{display:flex;flex-direction:column;gap:8px;max-height:400px;overflow:auto;padding-right:6px;scrollbar-width:thin}
+.pal-item{display:flex;gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--border);border-radius:12px;cursor:pointer;background:#fff;transition:border-color .15s,box-shadow .15s,transform .15s}
+.pal-item:hover{border-color:#c7d2fe;box-shadow:0 3px 12px rgba(99,102,241,.14);transform:translateY(-1px)}
+.pal-item.active{background:var(--pill);border-color:#a5b4fc;box-shadow:inset 0 0 0 1px #a5b4fc}
+.pal-thumb{width:168px;height:44px;position:relative;flex:0 0 auto}
+.pal-thumb canvas{width:168px;height:44px}
+.pal-name{font-size:13px;font-weight:600;color:#334155;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.output-wrap{position:relative}
+.cop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px}
+.tabs{display:inline-flex;gap:4px;background:#eef1f6;border-radius:12px;padding:4px}
+.tab{border:none;background:transparent;border-radius:9px;padding:7px 16px;cursor:pointer;font:inherit;font-size:13px;color:var(--muted);transition:color .15s,background .15s}
+.tab:hover{color:#334155}
+.tab.active{background:#fff;color:var(--text);font-weight:600;box-shadow:0 1px 4px rgba(15,23,42,.15)}
+.output{background:#0f172a;color:#e2e8f0;border-radius:12px;padding:12px 14px;font-family:"Cascadia Code",ui-monospace,Consolas,monospace;font-size:12.5px;line-height:1.55;white-space:pre-wrap;word-break:break-all;min-height:80px}
+.copy-icon{background:#1e293b;color:#e2e8f0;border:none;border-radius:9px;padding:6px 12px;cursor:pointer;font-size:12.5px;font-weight:600;transition:background .15s;flex:0 0 auto}
+.copy-icon:hover{background:#334155}
+#colorPicker{position:fixed;z-index:40;display:none;gap:3px;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:0 10px 32px rgba(15,23,42,.25);padding:5px}
+#bgMesh{position:fixed;inset:0;z-index:-1;pointer-events:none}
+#colorWheel{border-radius:50%;cursor:crosshair;flex:0 0 auto}
+#colorValue{cursor:ns-resize;flex:0 0 auto;border-radius:5px}
+footer{display:flex;justify-content:center;align-items:center;gap:10px;color:var(--muted);font-size:12.5px;margin:24px 0}
+footer a{color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-weight:600;transition:color .15s}
+footer a:hover{color:var(--text)}
+footer svg{width:16px;height:16px;fill:currentColor}
+footer span{color:var(--border)}
+#cubeCanvas{background:transparent}
+@media(max-width:1000px){.grid{grid-template-columns:1fr}.top-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="site-head-row">
+<img src="../logo.svg" alt="LUSAS Contour Colours" style="height:44px;margin:0;background:transparent">
+<h1>LUSAS Contour Colours</h1>
+</div>
+<div class="tagline">Pick a scientific palette, tune it, and copy an RGB list, Hex list or a one-line LUSAS VBScript command.</div>
+</header>
+<div class="container">
+<div class="main-col">
+<div class="top-row">
+<div class="card cube-card">
+<canvas id="cubeCanvas" width="150" height="150"></canvas>
+</div>
+<div class="card hero">
+<div class="swatch-col">
+<div class="sec-label">Selected colours</div>
+<canvas id="swatchCanvas" width="702" height="80"></canvas>
+<div class="controls">
+<div class="stepper">
+<span>Colours</span>
+<button id="dec">−</button>
+<input id="count" type="number" min="2" max="20" value="10">
+<button id="inc">+</button>
+</div>
+<button class="btn secondary" id="reverse">Reverse</button>
+</div>
+</div>
+</div>
+</div>
+<div class="grid">
+<div class="card pal-col"><h3>Sequential</h3><div class="pal-list" id="sequential"></div></div>
+<div class="card pal-col"><h3>Diverging</h3><div class="pal-list" id="diverging"></div></div>
+<div class="card pal-col"><h3>Qualitative</h3><div class="pal-list" id="qualitative"></div></div>
+</div>
+<div class="card output-wrap">
+<div class="cop-head">
+<div class="tabs">
+<button class="tab active" data-tab="rgb">RGB</button>
+<button class="tab" data-tab="hex">Hex</button>
+<button class="tab" data-tab="vbs">VBScript</button>
+</div>
+<button class="copy-icon" id="copyBtn" title="Copy">Copy</button>
+</div>
+<pre class="output" id="output"></pre>
+</div>
+</div>
+<canvas id="bgMesh"></canvas>
+<footer>
+<a href="https://github.com/your-user/lusas-contour-colors" target="_blank" rel="noopener">
+<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/></svg>GitHub</a>
+<span>·</span>
+<a href="https://www.lusas.com" target="_blank" rel="noopener">
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h8v8H4zM12 12h8v8h-8z" fill="currentColor"/><path d="M12 4h8v8h-8zM4 12h8v8H4z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>LUSAS</a>
+<span>·</span>
+<a href="https://www.linkedin.com/in/demo-profile" target="_blank" rel="noopener">
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.55C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.72C24 .77 23.2 0 22.22 0z"/></svg>LinkedIn</a>
+</footer>
+<div id="colorPicker">
+  <canvas id="colorWheel" width="56" height="56"></canvas>
+  <canvas id="colorValue" width="12" height="56"></canvas>
+</div>
+<script>
+const PALETTES = {
+Sequential:[
+{name:'Viridis',colors:['#440154','#3b2a6b','#355382','#32788a','#339781','#35b779','#59c463','#7ed14e','#a6da3d','#d1e131','#fde725']},
+{name:'Plasma',colors:['#0d0887','#3a0094','#6704a1','#8e119e','#ad2c8b','#cc4778','#de6662','#ef854b','#f6a43a','#f3d12d','#f0f921']},
+{name:'BuGn',colors:['#f7fcfd','#e9f6fa','#d6f0ee','#b8e4da','#8fd4c2','#66c2a4','#48b27f','#2f9959','#157f3b','#006529','#00441b']},
+{name:'BuPu',colors:['#f7fcfd','#e5eff6','#ccdded','#b2cae1','#9ab4d6','#8c96c6','#8c74b5','#8a52a5','#852d90','#770c72','#4d004b']},
+{name:'GnBu',colors:['#f7fcf0','#e5f5df','#d4eece','#bee5bf','#9f dab8','#7bcc c4','#57b8d0','#399cc6','#1d7eb7','#0860a3','#084081']},
+{name:'OrRd',colors:['#fff7ec','#fee bcf','#fddcaf','#fdca94','#fdb27b','#fc8d59','#f26d4b','#e1452f','#c91d13','#a90000','#7f0000']},
+{name:'PuBu',colors:['#fff7fb','#f0eaf4','#dbdaeb','#bfc9e2','#9cb9d9','#74a9cf','#4295c3','#197db6','#0567a2','#045382','#023858']},
+{name:'PuBuGn',colors:['#fff7fb','#f0e6f2','#dbd8ea','#bfc9e2','#99b9d9','#67a9cf','#4095c3','#1787a0','#027976','#016452','#014636']},
+{name:'PuRd',colors:['#f7f4f9','#eae5f1','#dcc9e2','#d0aad2','#cd8bc2','#df65b0','#e53592','#d81b6b','#b80b4e','#8e003c','#67001f']},
+{name:'RdPu',colors:['#fff7f3','#fde5e1','#fcd0cc','#fbb6bc','#f994b1','#f768a1','#e23e99','#c11588','#99017b','#700174','#49006a']},
+{name:'YlGn',colors:['#ffffe5','#f9fdc2','#e5f5ac','#c7e89b','#a2d88a','#78c679','#4cb063','#2f944d','#15793e','#006134','#004529']},
+{name:'YlGnBu',colors:['#ffffd9','#f1f9b9','#d6efb3','#aadeb7','#73c8bd','#41b6c4','#2498c1','#2072b2','#1f2f88','#081d58']},
+{name:'YlOrBr',colors:['#ffffe5','#fff9c4','#feeba2','#fed777','#febb47','#fe9929','#f07818','#d95a09','#b84203','#8f3104','#662506']},
+{name:'YlOrRd',colors:['#ffffcc','#fff2ad','#ffe58f','#fed572','#feab44','#fd8044','#fd5038','#fc542c','#ed2f22','#d4121f','#b10026']},
+{name:'Blues',colors:['#f7fbff','#e3eef9','#d0e1f2','#b6d4e9','#94c4df','#6baed6','#4a98c9','#2e7ebc','#1764ab','#084a92','#08306b']},
+{name:'Greens',colors:['#f7fcf5','#e9f6e4','#d3eecd','#b8e3b1','#98d594','#74c476','#4bb062','#2f984f','#157f3b','#006529','#00441b']},
+{name:'Greys',colors:['#ffffff','#f3f3f3','#e2e2e2','#cecece','#b5b5b5','#969696','#7a7a7a','#5f5f5f','#404040','#1e1e1e','#000000']},
+{name:'Oranges',colors:['#fff5eb','#fee9d4','#fdd9b4','#fdc28c','#fda762','#fd8d3c','#f3701b','#e35508','#c54102','#9e3303','#7f2704']},
+{name:'Purples',colors:['#fcfbfd','#f2f0f7','#e2e2ef','#cecee5','#b6b6d8','#9e9ac8','#8683bd','#7363ac','#61409b','#501f8b','#3f007d']},
+{name:'Reds',colors:['#fff5f0','#fee4d8','#fd cab5','#fcab8e','#fc8a6a','#fb6a4a','#f14432','#d92623','#bc141a','#990c13','#67000d']}
+],
+Diverging:[
+{name:'Jedi',colors:['#000080','#0000ff','#0080ff','#00ffff','#00ff40','#ffff00','#ffc809','#ff9e29','#ff6d30','#e60000']},
+{name:'RdBu',colors:['#67001f','#b2182b','#d6604d','#f4a582','#fddbc7','#f7f7f7','#d1e5f0','#92c5de','#4393c3','#2166ac','#053061']},
+{name:'RdYlBu',colors:['#a50026','#d73027','#f46d43','#fdae61','#fee090','#ffffbf','#e0f3f8','#abd9e9','#74add1','#4575b4','#313695']},
+{name:'BrBG',colors:['#543005','#8c510a','#bf812d','#dfc27d','#f6e8c3','#f5f5f5','#c7eae5','#80cdc1','#35978f','#01665e','#003c30']},
+{name:'PiYG',colors:['#8e0152','#c51b7d','#de77ae','#f1b6da','#fde0ef','#f7f7f7','#e6f5d0','#b8e186','#7fbc41','#4d9221','#276419']},
+{name:'PRGn',colors:['#40004b','#762a83','#9970ab','#c2a5cf','#e7d4e8','#f7f7f7','#d9f0d3','#a6dba0','#5aae61','#1b7837','#00441b']},
+{name:'PuOr',colors:['#7f3b08','#b35806','#e08214','#fd8d63','#fee0b6','#f7f7f7','#d8daeb','#b2abd2','#8073ac','#542788','#2d004b']},
+{name:'RdGy',colors:['#67001f','#b2182b','#d6604d','#f4a582','#fddbc7','#ffffff','#e0e0e0','#bababa','#878787','#4d4d4d','#1a1a1a']},
+{name:'RdYlGn',colors:['#a50026','#d73027','#f46d43','#fdae61','#fee08b','#ffffbf','#d9ef8b','#a6d96a','#66bd63','#1a9850','#006837']},
+{name:'Spectral',colors:['#9e0142','#d53e4f','#f46d43','#fdae61','#fee08b','#ffffbf','#e6f598','#abdda4','#66c2a5','#3288bd','#5e4fa2']}
+],
+Qualitative:[
+{name:'Okabe-Ito',colors:['#000000','#e69f00','#56b4e9','#009e73','#f0e442','#0072b2','#d55e00','#cc79a7']},
+{name:'Tol Bright',colors:['#4477aa','#66ccee','#228833','#ccbb44','#ee6677','#aa3377','#bbbbbb']},
+{name:'Nature Muted',colors:['#4e79a7','#f28e2b','#e15759','#76b7b2','#59a14f']}
+]
+};
+// fix minor typos in palette hex strings
+function cleanHex(h){return h.replace(/\s+/g,'');}
+Object.values(PALETTES).flat().forEach(p=>{p.colors=p.colors.map(cleanHex);});
+
+function hexToColorRef(hex){
+  const v=parseInt(hex.slice(1),16);
+  const r=(v>>16)&255,g=(v>>8)&255,b=v&255;
+  return (r)|(g<<8)|(b<<16);
+}
+function interp(a,b,t){
+  const ah=parseInt(a.slice(1),16), bh=parseInt(b.slice(1),16);
+  const ar=(ah>>16)&255,ag=(ah>>8)&255,ab=ah&255;
+  const br=(bh>>16)&255,bg=(bh>>8)&255,bb=bh&255;
+  const r=Math.round(ar+(br-ar)*t),g=Math.round(ag+(bg-ag)*t),bl=Math.round(ab+(bb-ab)*t);
+  return '#'+[r,g,bl].map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+function resample(pal,count){
+  const cols=pal.colors;
+  if(pal.name==='Qualitative' || pal.colors.length<11){/* fallback */}
+  if(pal.type==='qual' || ['Okabe-Ito','Tol Bright','Nature Muted'].includes(pal.name)){
+    const out=[];for(let i=0;i<count;i++)out.push(cols[i%cols.length]);return out;
+  }
+  if(count<=cols.length){
+    const step=(cols.length-1)/(count-1);const out=[];
+    for(let i=0;i<count;i++)out.push(interp(cols[Math.floor(i*step)],cols[Math.ceil(i*step)],(i*step)%1));
+    return out;
+  }
+  const out=[];for(let i=0;i<count;i++){const t=i/(count-1)*(cols.length-1);const i0=Math.floor(t),i1=Math.min(cols.length-1,i0+1);out.push(interp(cols[i0],cols[i1],t-i0));}return out;
+}
+
+let selected=null, count=10, reversed=false;
+let currentColors=[];
+let customEdit=false;
+const canvas=document.getElementById('swatchCanvas');const ctx=canvas.getContext('2d');
+let lastGeom={diam:0,step:0,start:0,top:0};
+function drawSwatches(){
+  const cols=currentColors;
+  const diam=Math.min(56,canvas.height-16);const step=diam*0.6;
+  const total=diam+step*(cols.length-1);
+  const w=702; // fits max colour count (20)
+  if(canvas.width!==w)canvas.width=w;
+  ctx.clearRect(0,0,w,canvas.height);
+  const start=(w-total)/2,top=(canvas.height-diam)/2;
+  lastGeom={diam,step,start,top};
+  // outline
+  ctx.beginPath();
+  for(let i=0;i<cols.length;i++){
+    const x=start+i*step, y=top;
+    ctx.moveTo(x+diam/2,y);
+    ctx.arc(x+diam/2,y+diam/2,diam/2,0,Math.PI*2);
+  }
+  ctx.closePath();
+  ctx.lineWidth=2;ctx.strokeStyle='#000';ctx.stroke();
+  // fill
+  for(let i=0;i<cols.length;i++){
+    const x=start+i*step, y=top;
+    ctx.beginPath();ctx.arc(x+diam/2,y+diam/2,diam/2,0,Math.PI*2);
+    ctx.fillStyle=cols[i];ctx.fill();
+  }
+}
+canvas.addEventListener('click',e=>{
+  const rect=canvas.getBoundingClientRect();
+  const x=(e.clientX-rect.left)*(canvas.width/rect.width);
+  const y=(e.clientY-rect.top)*(canvas.height/rect.height);
+  const g=lastGeom;
+  if(!g.diam) return;
+  let hit=false;
+  for(let i=0;i<currentColors.length;i++){
+    const cx_i=g.start+i*g.step+g.diam/2;
+    const cy=g.top+g.diam/2;
+    const dx=x-cx_i, dy=y-cy;
+    if(dx*dx+dy*dy<=(g.diam/2)*(g.diam/2)){
+      openPicker(i,cx_i,cy,g.diam);
+      hit=true;
+      break;
+    }
+  }
+  if(!hit) closePicker();
+});
+
+// ---- circular colour picker (sized to a colour circle) ----
+const pickerEl=document.getElementById('colorPicker');
+const wheel=document.getElementById('colorWheel');const wctx=wheel.getContext('2d');
+const bar=document.getElementById('colorValue');const bctx=bar.getContext('2d');
+let pickIndex=-1,pickHSV={h:0,s:1,v:1},pickerOpen=false;
+
+function hexToHsv(hex){
+  const v=parseInt(hex.slice(1),16);
+  const r=((v>>16)&255)/255,g=((v>>8)&255)/255,b=(v&255)/255;
+  const max=Math.max(r,g,b),min=Math.min(r,g,b),d=max-min;
+  let h=0;
+  if(d){
+    if(max===r)h=((g-b)/d+6)%6;
+    else if(max===g)h=(b-r)/d+2;
+    else h=(r-g)/d+4;
+    h*=60;
+  }
+  return {h, s:max?d/max:0, v:max};
+}
+function hsvToHex(h,s,v){
+  const c=v*s,x=c*(1-Math.abs((h/60)%2-1)),m=v-c;
+  let r,g,b;
+  if(h<60){r=c;g=x;b=0}else if(h<120){r=x;g=c;b=0}
+  else if(h<180){r=0;g=c;b=x}else if(h<240){r=0;g=x;b=c}
+  else if(h<300){r=x;g=0;b=c}else{r=c;g=0;b=x}
+  return '#'+[r,g,b].map(t=>Math.round((t+m)*255).toString(16).padStart(2,'0')).join('');
+}
+function drawWheel(){
+  const d=wheel.width, img=wctx.createImageData(d,d), data=img.data;
+  for(let py=0;py<d;py++)for(let px=0;px<d;px++){
+    const dx=px-d/2+0.5, dy=py-d/2+0.5;
+    const r=Math.sqrt(dx*dx+dy*dy);
+    const idx=(py*d+px)*4;
+    if(r>d/2){data[idx+3]=0;continue}
+    const hue=((Math.atan2(dy,dx)+Math.PI/2+Math.PI*2)%(Math.PI*2))/(Math.PI*2)*360;
+    const sat=Math.min(1,r/(d/2));
+    const col=hsvToHex(hue,sat,1);
+    data[idx]=parseInt(col.slice(1,3),16);
+    data[idx+1]=parseInt(col.slice(3,5),16);
+    data[idx+2]=parseInt(col.slice(5,7),16);
+    data[idx+3]=255;
+  }
+  wctx.putImageData(img,0,0);
+  const ang=(pickHSV.h*Math.PI/180)-Math.PI/2;
+  const rr=pickHSV.s*(d/2-2);
+  const mr=Math.max(4,Math.round(d/16));
+  wctx.beginPath();
+  wctx.arc(d/2+rr*Math.sin(ang+Math.PI/2),d/2-rr*Math.cos(ang+Math.PI/2),mr,0,Math.PI*2);
+  wctx.strokeStyle='#fff';wctx.lineWidth=2;wctx.stroke();
+  wctx.strokeStyle='rgba(0,0,0,.35)';wctx.lineWidth=1;
+  wctx.beginPath();wctx.arc(d/2+rr*Math.sin(ang+Math.PI/2),d/2-rr*Math.cos(ang+Math.PI/2),mr-1,0,Math.PI*2);wctx.stroke();
+}
+function drawBar(){
+  const w=bar.width,h=bar.height;
+  const grad=bctx.createLinearGradient(0,0,0,h);
+  grad.addColorStop(0,hsvToHex(pickHSV.h,pickHSV.s,1));
+  grad.addColorStop(1,'#000000');
+  bctx.fillStyle=grad;bctx.fillRect(0,0,w,h);
+  bctx.fillStyle='#fff';
+  bctx.fillRect(0,(1-pickHSV.v)*h-1,w,2);
+}
+function refreshPicker(){drawWheel();drawBar();}
+function setPickFromWheel(ev){
+  const rect=wheel.getBoundingClientRect();
+  const dx=ev.clientX-rect.left-rect.width/2;
+  const dy=ev.clientY-rect.top-rect.height/2;
+  const r=Math.min(1,Math.sqrt(dx*dx+dy*dy)/(rect.width/2));
+  const hue=((Math.atan2(dy,dx)+Math.PI/2)/(Math.PI*2)*360+360)%360;
+  pickHSV.h=hue;pickHSV.s=r;
+  applyPick();
+}
+function setPickFromBar(ev){
+  const rect=bar.getBoundingClientRect();
+  pickHSV.v=Math.max(0,Math.min(1,1-(ev.clientY-rect.top)/rect.height));
+  applyPick();
+}
+function applyPick(){
+  if(pickIndex>=0){
+    currentColors[pickIndex]=hsvToHex(pickHSV.h,pickHSV.s,pickHSV.v);
+    customEdit=true;
+    refresh();
+  }
+  refreshPicker();
+}
+function openPicker(index,cx,cy,diam){
+  pickIndex=index;
+  pickHSV=hexToHsv(currentColors[index]);
+  const px=Math.round(Math.max(150, diam*2.5));
+  wheel.style.width=px+'px';wheel.style.height=px+'px';wheel.width=px;wheel.height=px;
+  bar.style.height=px+'px';bar.width=14;bar.height=px;
+  pickerEl.style.display='flex';
+  pickerOpen=true;
+  refreshPicker();
+  const rect=canvas.getBoundingClientRect();
+  const scale=rect.width/canvas.width;
+  const lx=rect.left+cx*scale, ly=rect.top+cy*scale;
+  const pw=pickerEl.offsetWidth, ph=pickerEl.offsetHeight;
+  let left=Math.round(lx-pw/2);
+  let top=Math.round(ly+8);
+  if(top+ph>window.innerHeight-8) top=Math.round(ly-ph-8);
+  pickerEl.style.left=Math.max(8,Math.min(left,window.innerWidth-pw-8))+'px';
+  pickerEl.style.top=top+'px';
+  requestAnimationFrame(()=>{setTimeout(()=>{pickerOpen=false;},0);});
+}
+function closePicker(){pickerEl.style.display='none';pickIndex=-1;}
+wheel.addEventListener('mousedown',ev=>{ev.preventDefault();setPickFromWheel(ev);
+  const move=e=>setPickFromWheel(e), up=()=>{window.removeEventListener('mousemove',move);window.removeEventListener('mouseup',up);};
+  window.addEventListener('mousemove',move);window.addEventListener('mouseup',up);});
+bar.addEventListener('mousedown',ev=>{ev.preventDefault();setPickFromBar(ev);
+  const move=e=>setPickFromBar(e), up=()=>{window.removeEventListener('mousemove',move);window.removeEventListener('mouseup',up);};
+  window.addEventListener('mousemove',move);window.addEventListener('mouseup',up);});
+document.addEventListener('mousedown',e=>{
+  if(pickerEl.style.display==='none')return;
+  if(pickerEl.contains(e.target)||e.target===canvas)return;
+  if(!pickerOpen)closePicker();
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePicker();});
+
+function refresh(){
+  drawSwatches();writeScript();
+}
+
+// ---- 3D rotating meshed cube colour preview (left side) ----
+const cubeCanvas=document.getElementById('cubeCanvas');
+const cctx=cubeCanvas.getContext('2d');
+const CubeFaces=(()=> {
+  const FACES=[{a:'x',d:1},{a:'x',d:-1},{a:'y',d:1},{a:'y',d:-1},{a:'z',d:1},{a:'z',d:-1}];
+  return FACES.map(f=>{
+    const others=['x','y','z'].filter(k=>k!==f.a);
+    const A=others[0],B=others[1];
+    const corner=(a,b)=>{const p={x:0,y:0,z:0};p[f.a]=0.5*f.d;p[A]=a-0.5;p[B]=b-0.5;return p;};
+    const cs=[corner(0,0),corner(1,0),corner(1,1),corner(0,1)];
+    const bilin=(s,t)=>{
+      const w=[(1-s)*(1-t),(1-s)*t,s*t,s*(1-t)];
+      let x=0,y=0,z=0;
+      cs.forEach((cc,i)=>{x+=cc.x*w[i];y+=cc.y*w[i];z+=cc.z*w[i];});
+      return {x,y,z};
+    };
+    return bilin;
+  });
+})();
+let rotX=-0.45,rotY=0.55;
+function rot3(p){
+  const cy=Math.cos(rotY),sy=Math.sin(rotY),cx=Math.cos(rotX),sx=Math.sin(rotX);
+  const y1=p.y*cx-p.z*sx,z1=p.y*sx+p.z*cx;
+  return {x:p.x*cy+z1*sy,y:y1,z:-p.x*sy+z1*cy};
+}
+function drawCube(){
+  const size=cubeCanvas.width,c0=size/2,scale=size*0.40,nDiv=8;
+  cctx.clearRect(0,0,size,size);
+  if(!currentColors.length)return;
+  const quads=[];
+  CubeFaces.forEach(bilin=>{
+    for(let i=0;i<nDiv;i++)for(let j=0;j<nDiv;j++){
+      const wpts=[
+        bilin(i/nDiv,j/nDiv),
+        bilin((i+1)/nDiv,j/nDiv),
+        bilin((i+1)/nDiv,(j+1)/nDiv),
+        bilin(i/nDiv,(j+1)/nDiv)
+      ];
+      const wc={x:(wpts[0].x+wpts[1].x+wpts[2].x+wpts[3].x)/4,
+                y:(wpts[0].y+wpts[1].y+wpts[2].y+wpts[3].y)/4,
+                z:(wpts[0].z+wpts[1].z+wpts[2].z+wpts[3].z)/4};
+      quads.push({pts:wpts.map(rot3),wc});
+    }
+  });
+  quads.forEach(q=>{q.z=q.pts.reduce((a,p)=>a+p.z,0)/4;});
+  quads.sort((a,b)=>a.z-b.z);
+  quads.forEach(q=>{
+    const [p0,p1,p2,p3]=q.pts;
+    const t=Math.min(0.9999,Math.max(0,(q.wc.x+q.wc.y+q.wc.z+1.5)/3))*(currentColors.length-1);
+    const i0=Math.floor(t),fr=t-i0;
+    const col=interp(currentColors[i0],currentColors[Math.min(i0+1,currentColors.length-1)],fr);
+    const P=p=>[c0+p.x*scale,c0+p.y*scale];
+    const a1=P(p0),a2=P(p1),a3=P(p2),a4=P(p3);
+    cctx.beginPath();
+    cctx.moveTo(a1[0],a1[1]);cctx.lineTo(a2[0],a2[1]);cctx.lineTo(a3[0],a3[1]);cctx.lineTo(a4[0],a4[1]);
+    cctx.closePath();
+    cctx.fillStyle=col;cctx.fill();
+    cctx.lineWidth=1;cctx.strokeStyle='#111';cctx.stroke();
+  });
+}
+(function animateCube(){
+  rotY+=0.005;
+  drawCube();
+  requestAnimationFrame(animateCube);
+})();
+
+// ---- mesh background fading towards the top ----
+const bgMesh=document.getElementById('bgMesh');
+const mbctx=bgMesh.getContext('2d');
+function drawMesh(){
+  const w=innerWidth,h=innerHeight;
+  bgMesh.width=w;bgMesh.height=h;
+  mbctx.clearRect(0,0,w,h);
+  const step=Math.max(38,Math.min(66,w/22));
+  for(let x=step/2,k=0;x<w+step;x+=step,k++){   // straight vertical lines, whole page
+    const col=k%2?'139,92,246':'99,102,241';
+    for(let y1=0;y1<h;y1+=h){
+      const t1=y1/h;
+      mbctx.strokeStyle=`rgba(${col},${(0.05+0.09*(1-Math.abs(0.5-t1)*0.6)).toFixed(3)})`;
+      mbctx.lineWidth=1;
+      mbctx.beginPath();mbctx.moveTo(x,y1);mbctx.lineTo(x+Math.sin(x*0.013+y1)*10,y1+h);mbctx.stroke();
+    }
+  }
+  for(let y=step/2,k=0;y<h+step;y+=step,k++){   // wavy horizontal lines, whole page
+    const t=y/h;
+    const dir=(Math.floor(y/step)%2)?1:-1;
+    const bump=step*0.22*dir*Math.sin(y*0.011);
+    const col=k%2?'99,102,241':'139,92,246';
+    mbctx.strokeStyle=`rgba(${col},${(0.06+0.10*t).toFixed(3)})`;
+    mbctx.lineWidth=1;
+    mbctx.beginPath();mbctx.moveTo(0,y);
+    mbctx.quadraticCurveTo(w*0.3,y+bump,w*0.5,y);
+    mbctx.quadraticCurveTo(w*0.7,y-bump,w,y);
+    mbctx.stroke();
+  }
+}
+drawMesh();
+addEventListener('resize',drawMesh);
+
+function hexToRgb(hex){
+  const v=parseInt(hex.slice(1),16);
+  return `${(v>>16)&255},${(v>>8)&255},${v&255}`;
+}
+let activeTab='rgb';
+function writeScript(){
+  const refs=currentColors.map(hexToColorRef);
+  const texts={
+    rgb:currentColors.map(hexToRgb).join('\n'),
+    hex:currentColors.join('\n'),
+    vbs:`View.Contours.SetRangeAutoNumber ${refs.length-1},1:View.Contours.SetSeedColours Array(${refs.join(',')}),1:View.Update True`
+  };
+  document.getElementById('output').textContent=texts[activeTab];
+}
+document.querySelectorAll('.tab').forEach(t=>{
+  t.onclick=()=>{
+    activeTab=t.dataset.tab;
+    document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===t));
+    writeScript();
+  };
+});
+function update(){
+  if(!selected) return;
+  currentColors=resample(selected,count);
+  if(reversed) currentColors=currentColors.slice().reverse();
+  customEdit=false;
+  refresh();
+}
+function selectPal(p){
+  selected=p; reversed=false;
+  count=Math.max(2,Math.min(20,p.colors.length));
+  document.getElementById('count').value=count;
+  document.querySelectorAll('.pal-item').forEach(e=>e.classList.remove('active'));
+  update();
+}
+function renderLists(){
+  ['Sequential','Diverging','Qualitative'].forEach(kind=>{
+    const cont=document.getElementById(kind.toLowerCase());
+    cont.innerHTML='';
+    PALETTES[kind].forEach(p=>{
+      const item=document.createElement('div');item.className='pal-item';
+      const thumb=document.createElement('div');thumb.className='pal-thumb';
+      const cvs=document.createElement('canvas');cvs.width=168;cvs.height=44;
+      const c=cvs.getContext('2d');const diam=20,step=diam*0.6;
+      const total=diam+step*(p.colors.length-1);const start=(168-total)/2;const top=12;
+      c.lineWidth=1;c.strokeStyle='#000';
+      c.beginPath();for(let i=0;i<p.colors.length;i++){const x=start+i*step;c.moveTo(x+diam/2,top+diam/2);c.arc(x+diam/2,top+diam/2,diam/2,0,Math.PI*2);}c.stroke();
+      p.colors.forEach((col,i)=>{const x=start+i*step;c.beginPath();c.arc(x+diam/2,top+diam/2,diam/2,0,Math.PI*2);c.fillStyle=col;c.fill();});
+      thumb.appendChild(cvs);
+      const name=document.createElement('div');name.className='pal-name';name.textContent=p.name;
+      item.appendChild(thumb);item.appendChild(name);
+      item.onclick=()=>{selectPal(p);document.querySelectorAll('.pal-item').forEach(e=>e.classList.remove('active'));item.classList.add('active');};
+      cont.appendChild(item);
+    });
+  });
+}
+document.getElementById('count').addEventListener('input',e=>{count=Math.max(2,Math.min(20,parseInt(e.target.value)||10));update();});
+document.getElementById('inc').onclick=()=>{count=Math.min(20,count+1);document.getElementById('count').value=count;update();};
+document.getElementById('dec').onclick=()=>{count=Math.max(2,count-1);document.getElementById('count').value=count;update();};
+document.getElementById('reverse').onclick=()=>{reversed=!reversed;update();};
+document.getElementById('copyBtn').onclick=()=>{navigator.clipboard.writeText(document.getElementById('output').textContent);};
+
+renderLists();
+selectPal(PALETTES.Diverging[0]);
+</script>
+</body>
+</html>

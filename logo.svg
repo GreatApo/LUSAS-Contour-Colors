@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Contour bands on a finite element plate</title>
+  <defs>
+    <clipPath id="plate"><path d="M83 121Q83 91 113 91h286q30 0 30 30v270q0 30-30 30H113q-30 0-30-30Z"/></clipPath>
+  </defs>
+  <g clip-path="url(#plate)">
+    <path fill="#1c51cc" d="M83 91h346v330H83z"/>
+    <path d="M83 308C145 290 139 216 211 207s92 18 137-20 58-43 81-39v273H83Z" fill="#00b5d4"/>
+    <path d="M83 355c78-23 91-83 151-85s81 4 121-29 53-31 74-26v206H83Z" fill="#49cf71"/>
+    <path d="M83 397c84-15 113-72 175-72s94-42 171-52v148H83Z" fill="#f6d442"/>
+    <path d="M163 421c36-31 77-42 122-43 59-2 83-42 144-44v87Z" fill="#f47d38"/>
+    <path d="M292 421c40-12 76-40 137-38v38Z" fill="#e94845"/>
+    <g stroke="#142d3c" stroke-width="3" opacity=".6" fill="none">
+      <path d="M83 146h346M83 201h346M83 256h346M83 311h346M83 366h346M140 91v330M198 91v330M256 91v330M314 91v330M372 91v330"/>
+    </g>
+  </g>
+  <path d="M83 121Q83 91 113 91h286q30 0 30 30v270q0 30-30 30H113q-30 0-30-30Z" fill="none" stroke="#142d3c" stroke-width="12"/>
+  <g transform="translate(364 150)">
+    <circle r="60" fill="#fff" stroke="#142d3c" stroke-width="10"/>
+    <path d="M0-34C-7-21-24-5-24 9a24 24 0 0 0 48 0C24-5 7-21 0-34Z" fill="#00b5d4" stroke="#142d3c" stroke-width="7" stroke-linejoin="round"/>
+  </g>
+</svg>

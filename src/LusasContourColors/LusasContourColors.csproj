@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{1A595155-86B8-45B1-A0AF-6D32C8A51AA3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LusasContourColors</RootNamespace>
+    <AssemblyName>LusasContourColors</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <LusasVersion>240</LusasVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug_211' ">
+    <LusasVersion>211</LusasVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug_220' ">
+    <LusasVersion>220</LusasVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug_230' ">
+    <LusasVersion>230</LusasVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug_240' ">
+    <LusasVersion>240</LusasVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release_211' ">
+    <LusasVersion>211</LusasVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release_220' ">
+    <LusasVersion>220</LusasVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release_230' ">
+    <LusasVersion>230</LusasVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release_240' ">
+    <LusasVersion>240</LusasVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)' == 'Win32'">
+    <OutputPath>C:\ProgramData\LUSAS$(LusasVersion)\x86\Modules\</OutputPath>
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Program Files (x86)\LUSAS$(LusasVersion)\Programs (x86)\lusas_m.exe</StartProgram>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)' == 'x64'">
+    <OutputPath>C:\ProgramData\LUSAS$(LusasVersion)\x64\Modules\</OutputPath>
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Program Files\LUSAS$(LusasVersion)\Programs\lusas_m.exe</StartProgram>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(Configuration.StartsWith('Debug'))">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(Configuration.StartsWith('Release'))">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <StartupObject />
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>LusasContourColors.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Platform)' == 'Win32'">
+    <Reference Include="Common">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\LUSAS$(LusasVersion)\Programs (x86)\Common.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="KSharedEnum">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\LUSAS$(LusasVersion)\Programs (x86)\KSharedEnum.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Lusas.Interop">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\LUSAS$(LusasVersion)\Programs (x86)\Lusas.Interop.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Platform)' == 'x64'">
+    <Reference Include="Common">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\LUSAS$(LusasVersion)\Programs\Common.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="KSharedEnum">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\LUSAS$(LusasVersion)\Programs\KSharedEnum.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Lusas.Interop">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\LUSAS$(LusasVersion)\Programs\Lusas.Interop.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="CardPanel.cs" />
+    <Compile Include="ContourColorService.cs" />
+    <Compile Include="ContourColorsDialog.cs" />
+    <Compile Include="ContourColorsModule.cs" />
+    <Compile Include="CountStepper.cs" />
+    <Compile Include="Drawing.cs" />
+    <Compile Include="IconButton.cs" />
+    <Compile Include="Palette.cs" />
+    <Compile Include="PaletteCatalog.cs" />
+    <Compile Include="PaletteListBox.cs" />
+    <Compile Include="PillButton.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SwatchBar.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="LusasContourColors.lml" />
+    <None Include="LusasContourColors.snk" />
+  </ItemGroup>
+
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <Target Name="CopyLMLFile" AfterTargets="AfterBuild">
+    <Copy SourceFiles="$(ProjectDir)LusasContourColors.lml" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
+  </Target>
+</Project>
