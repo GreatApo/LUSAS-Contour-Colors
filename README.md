@@ -9,7 +9,7 @@ A LUSAS Modeller plugin for applying scientific contour colour palettes and edit
 ## Features
 
 - 33 built-in palettes: 20 sequential, 10 diverging and 3 qualitative.
-- LUSAS `Jedi` palette, using the original 10 contour seed colours, listed first under `Diverging`.
+- LUSAS `Jet` palette, using the original 10 contour seed colours, listed first under `Diverging`.
 - Adjustable colour count from 2 to 20. Sequential and diverging palettes are resampled; qualitative palettes are cycled.
 - Live applying: selecting a palette, changing the count or editing a colour updates the current LUSAS view immediately.
 - Modeless dialog: LUSAS remains usable while the palette window is open.
@@ -76,7 +76,7 @@ The build copies the compiled assembly and `LusasContourColors.lml` manifest int
 6. Use the reverse icon at the top-right of the preview card to flip the scale.
 7. Click `Done` or close the window with `X`.
 
-Selecting a palette applies it immediately. A palette initially uses its native colour count: 11 for most palettes, or 10 for `Jedi`. Changing the `Colours` value resamples sequential and diverging palettes; qualitative palettes are cycled. Once you change the count, that count is kept when you switch palettes. Returning to a selected palette's native count restores its original colours.
+Selecting a palette applies it immediately. A palette initially uses its native colour count: 11 for most palettes, or 10 for `Jet`. Changing the `Colours` value resamples sequential and diverging palettes; qualitative palettes are cycled. Once you change the count, that count is kept when you switch palettes. Returning to a selected palette's native count restores its original colours.
 
 The number of contour ranges is set automatically to the number of colours minus one.
 

@@ -256,7 +256,7 @@ namespace LusasContourColors
 
         private void LoadColours()
         {
-            var palette = PaletteCatalog.All.First(item => item.Name == "Jedi");
+            var palette = PaletteCatalog.All.First(item => item.Name == "Jet");
             _selectedPalette = palette;
             _lastPaletteType = palette.Type;
             _colours = palette.Colours;

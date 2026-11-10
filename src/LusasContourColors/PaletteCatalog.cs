@@ -10,7 +10,7 @@ namespace LusasContourColors
         public static IReadOnlyList<Palette> All { get; } = new[]
         {
             // LUSAS factory default contour seeds (10 classes).
-            new Palette("Jedi", PaletteType.Diverging, Color.FromArgb(255, 0x00, 0x00, 0x80), Color.FromArgb(255, 0x00, 0x00, 0xFF), Color.FromArgb(255, 0x00, 0x80, 0xFF), Color.FromArgb(255, 0x00, 0xFF, 0xFF), Color.FromArgb(255, 0x00, 0xFF, 0x40), Color.FromArgb(255, 0xFF, 0xFF, 0x00), Color.FromArgb(255, 0xFF, 0xC8, 0x09), Color.FromArgb(255, 0xFF, 0x9E, 0x29), Color.FromArgb(255, 0xFF, 0x6D, 0x30), Color.FromArgb(255, 0xE6, 0x00, 0x00)),
+            new Palette("Jet", PaletteType.Diverging, Color.FromArgb(255, 0x00, 0x00, 0x80), Color.FromArgb(255, 0x00, 0x00, 0xFF), Color.FromArgb(255, 0x00, 0x80, 0xFF), Color.FromArgb(255, 0x00, 0xFF, 0xFF), Color.FromArgb(255, 0x00, 0xFF, 0x40), Color.FromArgb(255, 0xFF, 0xFF, 0x00), Color.FromArgb(255, 0xFF, 0xC8, 0x09), Color.FromArgb(255, 0xFF, 0x9E, 0x29), Color.FromArgb(255, 0xFF, 0x6D, 0x30), Color.FromArgb(255, 0xE6, 0x00, 0x00)),
 
             // ColorBrewer 2.0 - https://colorbrewer2.org
             // 9 diverging and 18 sequential schemes. Native 11-class ramps are used as-is;
