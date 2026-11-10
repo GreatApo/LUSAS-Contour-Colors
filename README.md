@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.svg" alt="LUSAS Contour Colours" width="240">
+  <img src="docs/logo.svg" alt="LUSAS Contour Colours" width="240">
 </p>
 
 # LUSAS Contour Colours
@@ -19,8 +19,8 @@ A LUSAS Modeller plugin for applying scientific contour colour palettes and edit
 
 ## Preview
 
-<img src="preview_dialog.png" alt="Contour Colours dialog">
-<img src="preview_beam.png" alt="Plasma contour applied on a beam">
+<img src="docs/preview_dialog.png" alt="Contour Colours dialog">
+<img src="docs/preview_beam.png" alt="Plasma contour applied on a beam">
 
 ## Requirements
 
